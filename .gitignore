@@ -1,0 +1,13 @@
+# OS noise
+.DS_Store
+
+# Editor noise
+.vscode/
+.idea/
+*.swp
+
+# chezmoi local state should never end up here
+chezmoi.toml
+
+# Captured-but-not-yet-curated dumps from scripts/capture.sh
+/tmp-capture/

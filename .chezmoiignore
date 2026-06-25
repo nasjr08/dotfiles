@@ -1,0 +1,9 @@
+# Non-chezmoi-managed directories — chezmoi must not try to install these into ~/.
+README.md
+bootstrap.sh
+packages
+editors
+macos
+scripts
+docs
+LICENSE
