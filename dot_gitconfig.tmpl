@@ -1,0 +1,29 @@
+[user]
+    name  = {{ .fullName | quote }}
+    email = {{ .email | quote }}
+
+[init]
+    defaultBranch = main
+
+[pull]
+    rebase = false
+
+[push]
+    autoSetupRemote = true
+
+[core]
+    editor = nvim
+
+[filter "lfs"]
+    clean    = git-lfs clean -- %f
+    smudge   = git-lfs smudge -- %f
+    process  = git-lfs filter-process
+    required = true
+
+{{ if eq .flavor "work" -}}
+# Rewrites for the work GitHub org so SSH uses the work-specific host alias
+# defined in private_dot_ssh/config.tmpl. Replace <WORK_ORG> with the actual
+# work GitHub org name once known.
+[url "git@github.com-work:<WORK_ORG>/"]
+    insteadOf = git@github.com:<WORK_ORG>/
+{{- end }}

@@ -9,13 +9,19 @@ VAULT="${OP_VAULT:-Work}"
 PATHS=(
     # Required for bootstrap (GitHub SSH access).
     "op://${VAULT}/${VAULT} GitHub SSH/public key"
-
-    # Uncomment as you create the items in 1Password (see docs/1password-setup.md):
-    # "op://${VAULT}/${VAULT} AWS – default/access_key"
-    # "op://${VAULT}/${VAULT} AWS – default/secret_key"
-    # "op://${VAULT}/OpenAI/credential"
-    # "op://${VAULT}/Anthropic/credential"
 )
+
+# Personal-only paths (read regardless of $OP_VAULT, since they always live
+# in the Personal vault).
+PERSONAL_PATHS=(
+    "op://Personal/OpenAI/credential"
+)
+
+# Uncomment additional paths as you create the items in 1Password
+# (see docs/1password-setup.md):
+# PATHS+=("op://${VAULT}/${VAULT} AWS – default/access_key")
+# PATHS+=("op://${VAULT}/${VAULT} AWS – default/secret_key")
+# PATHS+=("op://${VAULT}/Anthropic/credential")
 
 if ! command -v op >/dev/null 2>&1; then
     echo "FAIL: 'op' CLI not installed. Run: brew install 1password-cli" >&2
@@ -31,7 +37,7 @@ if ! op vault list >/dev/null 2>&1; then
 fi
 
 fail=0
-for path in "${PATHS[@]}"; do
+for path in "${PATHS[@]}" "${PERSONAL_PATHS[@]}"; do
     if op read "$path" >/dev/null 2>&1; then
         printf "  OK   %s\n" "$path"
     else
