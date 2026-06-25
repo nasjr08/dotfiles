@@ -1,0 +1,72 @@
+{
+    "workbench.startupEditor": "none",
+    "window.commandCenter": true,
+    "python.languageServer": "None",
+    "notebook.defaultFormatter": "charliermarsh.ruff",
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.unicodeHighlight.ambiguousCharacters": false,
+    "remote.autoForwardPortsSource": "hybrid",
+    "files.associations": {
+        "*.rmd": "rmarkdown",
+        "*.qmd": "quarto",
+        "*.Rmd": "rmarkdown"
+    },
+    "workbench.settings.applyToAllProfiles": [
+        "r.linting.enable"
+    ],
+    "[r]": {
+        "editor.defaultFormatter": "REditorSupport.r",
+        "editor.formatOnSave": true,
+        "editor.tabSize": 2,
+        "editor.stickyScroll.defaultModel": "indentationModel"
+    },
+    "editor.largeFileOptimizations": false,
+    "r.lsp.enabled": true,
+    "r.rterm.mac": "/opt/homebrew/bin/R",
+    "[rmd]": {
+        "editor.wordWrap": "on",
+        "editor.formatOnSave": false,
+        "editor.defaultFormatter": "REditorSupport.r"
+    },    
+    "git.enableSmartCommit": true,
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "editor.folding": true,
+    "editor.foldingStrategy": "auto",
+    "terminal.integrated.inheritEnv": false,
+    "r.source.echo": true,
+    "workbench.editorAssociations": {
+        "*.csv": "default",
+        "*.html": "default"
+    },
+    "cursor.cpp.enablePartialAccepts": true,
+    "jupyter.themeMatplotlibPlots": true,
+    "r.rmarkdown.knit.openOutputFile": true,
+    "r.plot.defaults.fullWindowMode": true,
+    "r.plot.useHttpgd": true,
+    "explorer.confirmDragAndDrop": false,
+    "editor.formatOnPaste": true,
+    "errorLens.enabled": true,
+    "sonarlint.rules": {
+        "ipython:S117": {
+            "level": "off"
+        }
+    },
+    "errorLens.enabledDiagnosticLevels": [
+        "info",
+        "error",
+        "warning",
+        "hint"
+    ],
+    "[markdown]": {
+        "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+    },
+    "errorLens.messageEnabled": false,
+    "aws.cloudformation.telemetry.enabled": false,
+    "dev.containers.dockerPath": "/usr/local/bin/docker",
+    "notebook.lineNumbers": "on"
+}
