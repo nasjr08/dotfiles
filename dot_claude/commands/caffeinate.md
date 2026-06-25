@@ -1,0 +1,1 @@
+Run `caffeinate -d &` in the background to prevent the Mac from sleeping or the display from turning off. Report the PID so the user can kill it later if needed. After starting it, confirm it's running with `pgrep caffeinate`.

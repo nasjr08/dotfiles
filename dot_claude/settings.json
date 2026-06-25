@@ -1,0 +1,7 @@
+{
+  "model": "opus[1m]",
+  "enabledPlugins": {
+    "job-radar@local-desktop-app-uploads": true,
+    "superpowers@claude-plugins-official": true
+  }
+}
