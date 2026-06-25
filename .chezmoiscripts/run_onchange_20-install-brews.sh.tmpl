@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Install all Homebrew packages, casks, and Mac App Store apps.
+# Re-runs when content of packages/Brewfile, packages/Brewfile.personal.tmpl,
+# or packages/Brewfile.work.tmpl changes.
+#
+# Content fingerprint (forces re-run on edit):
+{{- $brewfile := joinPath .chezmoi.sourceDir "packages" "Brewfile" }}
+{{- $brewfilePersonal := joinPath .chezmoi.sourceDir "packages" "Brewfile.personal.tmpl" }}
+{{- $brewfileWork := joinPath .chezmoi.sourceDir "packages" "Brewfile.work.tmpl" }}
+# Brewfile sha256:          {{ sha256sum (include $brewfile) }}
+# Brewfile.personal sha256: {{ sha256sum (include $brewfilePersonal) }}
+# Brewfile.work sha256:     {{ sha256sum (include $brewfileWork) }}
+
+set -euo pipefail
+
+SRC="{{ .chezmoi.sourceDir }}"
+
+echo "[brews] running brew bundle for common Brewfile"
+brew bundle --no-lock --file="$SRC/packages/Brewfile"
+
+{{ if eq .flavor "personal" -}}
+echo "[brews] rendering and applying Brewfile.personal"
+TMP_BREWFILE_PERSONAL="$(mktemp)"
+trap 'rm -f "$TMP_BREWFILE_PERSONAL"' EXIT
+chezmoi execute-template < "$SRC/packages/Brewfile.personal.tmpl" > "$TMP_BREWFILE_PERSONAL"
+brew bundle --no-lock --file="$TMP_BREWFILE_PERSONAL"
+{{- end }}
+
+{{ if eq .flavor "work" -}}
+echo "[brews] rendering and applying Brewfile.work"
+TMP_BREWFILE_WORK="$(mktemp)"
+trap 'rm -f "$TMP_BREWFILE_WORK"' EXIT
+chezmoi execute-template < "$SRC/packages/Brewfile.work.tmpl" > "$TMP_BREWFILE_WORK"
+brew bundle --no-lock --file="$TMP_BREWFILE_WORK"
+{{- end }}
+
+echo "[brews] done"

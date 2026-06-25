@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Apply macOS system defaults by sourcing macos/defaults.sh.
+{{- $defaults := joinPath .chezmoi.sourceDir "macos" "defaults.sh" }}
+# defaults.sh sha256: {{ sha256sum (include $defaults) }}
+
+set -euo pipefail
+
+SRC="{{ .chezmoi.sourceDir }}"
+exec "$SRC/macos/defaults.sh"

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Idempotent prereq check — ensures Homebrew, chezmoi, op, mas all exist.
+# Most of these are installed by bootstrap.sh; this script is the safety net
+# for chezmoi-apply-driven setup on a Mac where bootstrap.sh wasn't used.
+
+set -euo pipefail
+
+echo "[prereqs] checking prerequisites..."
+
+if ! command -v brew >/dev/null 2>&1; then
+    echo "[prereqs] ERROR: Homebrew not installed. Run bootstrap.sh first or install manually:" >&2
+    # shellcheck disable=SC2016
+    echo '  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"' >&2
+    exit 1
+fi
+
+for pkg in 1password-cli mas shellcheck; do
+    if ! brew list "$pkg" >/dev/null 2>&1; then
+        echo "[prereqs] installing $pkg"
+        brew install "$pkg"
+    fi
+done
+
+if ! op account list >/dev/null 2>&1; then
+    echo "[prereqs] WARNING: 'op' is not signed in. Run 'op signin' before next chezmoi apply if you have op:// references." >&2
+fi
+
+echo "[prereqs] OK"

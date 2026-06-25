@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Install Cursor extensions from editors/cursor-extensions.txt.
+{{- $extfile := joinPath .chezmoi.sourceDir "editors" "cursor-extensions.txt" }}
+# extensions sha256: {{ sha256sum (include $extfile) }}
+
+set -euo pipefail
+
+SRC="{{ .chezmoi.sourceDir }}"
+EXT_FILE="$SRC/editors/cursor-extensions.txt"
+
+if ! command -v cursor >/dev/null 2>&1; then
+    echo "[cursor-ext] Cursor 'cursor' CLI not on PATH. Skipping. (Install Cursor app, then in Cursor: Cmd+Shift+P → 'Install cursor command in PATH'.)" >&2
+    exit 0
+fi
+
+if [[ ! -s "$EXT_FILE" ]]; then
+    echo "[cursor-ext] empty extension list, skipping"
+    exit 0
+fi
+
+echo "[cursor-ext] installing extensions from $EXT_FILE"
+while IFS= read -r ext; do
+    [[ -z "$ext" || "$ext" == \#* ]] && continue
+    cursor --install-extension "$ext" --force
+done < "$EXT_FILE"
+
+SETTINGS_SRC="$SRC/editors/cursor-settings.jsonc"
+SETTINGS_DST="$HOME/Library/Application Support/Cursor/User/settings.json"
+if [[ -f "$SETTINGS_SRC" ]]; then
+    mkdir -p "$(dirname "$SETTINGS_DST")"
+    cp "$SETTINGS_SRC" "$SETTINGS_DST"
+    echo "[cursor-ext] copied settings to $SETTINGS_DST"
+fi
+
+echo "[cursor-ext] done"
