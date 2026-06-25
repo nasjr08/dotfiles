@@ -15,7 +15,7 @@ Mac setup automation. One command provisions a fresh Mac with shell config, CLI 
 ### Bootstrap
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/<GH_USER>/dotfiles/main/bootstrap.sh | bash
+curl -fsSL https://raw.githubusercontent.com/nasjr08/dotfiles/main/bootstrap.sh | bash
 ```
 
 On first run you'll be prompted for:

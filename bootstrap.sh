@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # bootstrap.sh — provision a fresh Mac from this dotfiles repo.
 # Usage (on the target Mac, after signing into Apple ID and 1Password):
-#   curl -fsSL https://raw.githubusercontent.com/<GH_USER>/dotfiles/main/bootstrap.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/nasjr08/dotfiles/main/bootstrap.sh | bash
 
 set -euo pipefail
 
-DOTFILES_REPO="${DOTFILES_REPO:-git@github.com:<GH_USER>/dotfiles.git}"
+DOTFILES_REPO="${DOTFILES_REPO:-git@github.com:nasjr08/dotfiles.git}"
 LOG="$HOME/.bootstrap.log"
 BACKUP_DIR="$HOME/.bootstrap-backup-$(date +%Y%m%d-%H%M%S)"
 
