@@ -11,8 +11,7 @@ PATHS=(
     "op://${VAULT}/${VAULT} GitHub SSH/public key"
 )
 
-# Personal-only paths (read regardless of $OP_VAULT, since they always live
-# in the Personal vault).
+# Personal-only paths (only probed when OP_VAULT=Personal).
 PERSONAL_PATHS=(
     "op://Personal/OpenAI/credential"
 )
@@ -37,7 +36,7 @@ if ! op vault list >/dev/null 2>&1; then
 fi
 
 fail=0
-for path in "${PATHS[@]}" "${PERSONAL_PATHS[@]}"; do
+for path in "${PATHS[@]}"; do
     if op read "$path" >/dev/null 2>&1; then
         printf "  OK   %s\n" "$path"
     else
@@ -45,6 +44,17 @@ for path in "${PATHS[@]}" "${PERSONAL_PATHS[@]}"; do
         fail=1
     fi
 done
+
+if [[ "$VAULT" == "Personal" ]]; then
+    for path in "${PERSONAL_PATHS[@]}"; do
+        if op read "$path" >/dev/null 2>&1; then
+            printf "  OK   %s\n" "$path"
+        else
+            printf "  FAIL %s\n" "$path"
+            fail=1
+        fi
+    done
+fi
 
 if [[ $fail -ne 0 ]]; then
     echo "One or more paths failed. Check item names/fields in 1Password against docs/1password-setup.md." >&2

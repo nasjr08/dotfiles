@@ -22,6 +22,15 @@ backup_if_exists() {
 
 main() {
     : > "$LOG"
+
+    # Guard: catch un-substituted repo URL (Step 12.6 of the setup plan).
+    if [[ "$DOTFILES_REPO" == *"<GH_USER>"* ]]; then
+        echo "[bootstrap] ERROR: DOTFILES_REPO still contains the literal token <GH_USER>." >&2
+        echo "[bootstrap]   You must substitute your GitHub username before running this script." >&2
+        echo "[bootstrap]   See plan Step 12.6: sed -i '' 's/<GH_USER>/YOUR_USERNAME/g' bootstrap.sh" >&2
+        exit 1
+    fi
+
     log "starting bootstrap on $(sw_vers -productName) $(sw_vers -productVersion) ($(uname -m))"
 
     # 1. Xcode Command Line Tools
@@ -65,6 +74,15 @@ main() {
     for f in ~/.zshrc ~/.gitconfig ~/.ssh/config ~/.aws/credentials; do
         backup_if_exists "$f"
     done
+
+    # 5b. Verify GitHub SSH auth (requires 1Password SSH agent to be configured)
+    log "checking GitHub SSH auth (requires 1Password SSH agent)"
+    if ! ssh -T -o BatchMode=yes -o ConnectTimeout=5 git@github.com 2>&1 | grep -q "successfully authenticated"; then
+        echo "[bootstrap] ERROR: GitHub SSH auth not configured." >&2
+        echo "[bootstrap]   Open 1Password → Settings → Developer → enable 'Use the SSH agent'." >&2
+        echo "[bootstrap]   See README prereqs for the full list." >&2
+        exit 1
+    fi
 
     # 6. chezmoi init + apply
     log "running chezmoi init --apply $DOTFILES_REPO"

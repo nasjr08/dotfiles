@@ -16,14 +16,14 @@ set -euo pipefail
 SRC="{{ .chezmoi.sourceDir }}"
 
 echo "[brews] running brew bundle for common Brewfile"
-brew bundle --no-lock --file="$SRC/packages/Brewfile"
+brew bundle --file="$SRC/packages/Brewfile"
 
 {{ if eq .flavor "personal" -}}
 echo "[brews] rendering and applying Brewfile.personal"
 TMP_BREWFILE_PERSONAL="$(mktemp)"
 trap 'rm -f "$TMP_BREWFILE_PERSONAL"' EXIT
 chezmoi execute-template < "$SRC/packages/Brewfile.personal.tmpl" > "$TMP_BREWFILE_PERSONAL"
-brew bundle --no-lock --file="$TMP_BREWFILE_PERSONAL"
+brew bundle --file="$TMP_BREWFILE_PERSONAL"
 {{- end }}
 
 {{ if eq .flavor "work" -}}
@@ -31,7 +31,7 @@ echo "[brews] rendering and applying Brewfile.work"
 TMP_BREWFILE_WORK="$(mktemp)"
 trap 'rm -f "$TMP_BREWFILE_WORK"' EXIT
 chezmoi execute-template < "$SRC/packages/Brewfile.work.tmpl" > "$TMP_BREWFILE_WORK"
-brew bundle --no-lock --file="$TMP_BREWFILE_WORK"
+brew bundle --file="$TMP_BREWFILE_WORK"
 {{- end }}
 
 echo "[brews] done"

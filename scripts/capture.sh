@@ -38,7 +38,7 @@ if command -v mas >/dev/null 2>&1; then
 fi
 
 echo "[capture] dumping current full Brewfile to /tmp/Brewfile.full (NOT auto-merged)"
-brew bundle dump --describe --file=/tmp/Brewfile.full --force
+brew bundle dump --file=/tmp/Brewfile.full --force
 
 echo "[capture] showing diff vs the repo's curated Brewfile (manually merge wanted lines):"
 diff -u "$REPO/packages/Brewfile" /tmp/Brewfile.full | head -100 || true

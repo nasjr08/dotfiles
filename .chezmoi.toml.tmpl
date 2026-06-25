@@ -6,9 +6,11 @@
 {{- $fullName := promptStringOnce . "fullName" "Full name for git commits"      "Naseer Basma" -}}
 {{- $email    := promptStringOnce . "email"    "Email for git commits"          "" -}}
 {{- $opVault  := promptStringOnce . "op_vault" "1Password vault name for this flavor" (eq $flavor "work" | ternary "Work" "Personal") -}}
+{{- $workOrg  := promptStringOnce . "work_org" "Work GitHub org name (leave blank if personal)" "" -}}
 
 [data]
     flavor   = {{ $flavor | quote }}
     fullName = {{ $fullName | quote }}
     email    = {{ $email | quote }}
     op_vault = {{ $opVault | quote }}
+    work_org = {{ $workOrg | quote }}

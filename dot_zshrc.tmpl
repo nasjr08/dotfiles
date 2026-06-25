@@ -77,8 +77,8 @@ alias awsrmr='aws s3 rm --recursive'
 
 # Misc
 alias py-server='python -m http.server'
-alias caffeinate='caffeinate -d &'
-alias decaf='pgrep caffeinate | xargs kill'
+alias caff='caffeinate -d &'
+alias decaf='pkill caffeinate'
 
 # ===== Common shell functions =====
 run_in_docker() {
