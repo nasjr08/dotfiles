@@ -1,0 +1,24 @@
+# ~/.ssh/config — managed by chezmoi.
+# All host configs use the 1Password SSH agent — private keys never live on disk.
+
+Host *
+    IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+    AddKeysToAgent yes
+    ServerAliveInterval 60
+
+# GitHub via port 443 (works on networks that block port 22).
+Host github.com
+    Hostname ssh.github.com
+    Port 443
+    User git
+    IdentitiesOnly yes
+
+{{ if eq .flavor "work" -}}
+# Work-only host alias. Lets git use a different 1Password SSH key for the
+# work GitHub org (see dot_gitconfig.tmpl url-rewrite block).
+Host github.com-work
+    Hostname ssh.github.com
+    Port 443
+    User git
+    IdentitiesOnly yes
+{{- end }}
