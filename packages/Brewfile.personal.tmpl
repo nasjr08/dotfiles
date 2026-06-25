@@ -1,0 +1,49 @@
+{{ if eq .flavor "personal" -}}
+# packages/Brewfile.personal — applied only when flavor == "personal".
+# Bioinformatics, R/data science, media tools, plus the personal-flavor
+# Mac App Store apps. Update this file as your local stack evolves.
+
+# ===== Taps =====
+tap "supabase/tap"
+
+# ===== Bioinformatics =====
+brew "bedtools"
+brew "blast"
+brew "fastqc"
+brew "kraken2"
+brew "nextflow"
+
+# ===== R + scientific stack =====
+brew "r"
+
+# ===== Local databases =====
+brew "postgresql@14"
+
+# ===== Older language runtimes (specific tooling depends on these) =====
+brew "openjdk@11"
+
+# ===== Media / image tooling =====
+brew "ffmpeg"
+brew "imagemagick"
+brew "webp"
+brew "potrace"
+brew "fontconfig"
+brew "fribidi"
+
+# ===== Misc =====
+brew "speedtest-cli"
+
+# ===== Casks =====
+cask "anaconda"
+cask "datagrip"
+cask "inkscape"
+cask "ngrok"
+
+# ===== Mac App Store apps =====
+mas "GarageBand", id: 682658836
+mas "iMovie",     id: 408981434
+mas "Keynote",    id: 409183694
+mas "Numbers",    id: 409203825
+mas "Pages",      id: 409201541
+mas "Perplexity", id: 6714467650
+{{- end }}

@@ -1,0 +1,50 @@
+# packages/Brewfile — installed on every flavor.
+# Refresh the source-of-truth raw dump with:
+#   brew bundle dump --file=/tmp/Brewfile.full --force
+# then merge what you want into here (or Brewfile.work.tmpl /
+# Brewfile.personal.tmpl).
+
+# ===== Taps =====
+# (no common taps right now)
+
+# ===== Languages / runtimes =====
+brew "python@3.13"
+brew "node"
+brew "openjdk@21"
+
+# ===== Version control =====
+brew "git"
+brew "git-lfs"
+brew "gh"
+brew "libgit2"
+
+# ===== Dotfiles tooling =====
+brew "chezmoi"
+brew "mas"
+brew "shellcheck"
+
+# ===== Shell utilities =====
+brew "coreutils"
+brew "htop"
+brew "btop"
+brew "tree"
+brew "wget"
+brew "pkgconf"
+
+# ===== Cloud / cli =====
+brew "awscli"
+
+# ===== Python ecosystem =====
+brew "ruff"
+brew "poetry"
+
+# ===== Casks =====
+cask "caffeine"
+cask "1password-cli"
+cask "claude-code"
+cask "codex"
+
+# ===== Node globals =====
+# (Captured via `brew bundle dump`; node must be installed first.)
+npm "@anthropic-ai/claude-code"
+npm "corepack"
