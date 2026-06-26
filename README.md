@@ -4,6 +4,8 @@ Mac setup automation. One command provisions a fresh Mac with shell config, CLI 
 
 ## Bootstrap a fresh Mac
 
+> Before bootstrapping a new (especially work) Mac, walk through **[docs/pre-flight.md](docs/pre-flight.md)** on your current Mac first — it catches the only failure mode bootstrap can't recover from (auth misconfig).
+
 ### Prerequisites (manual, ~5 min)
 
 1. Sign into Apple ID and iCloud Keychain (System Settings).
