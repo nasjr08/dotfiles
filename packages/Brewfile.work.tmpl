@@ -8,6 +8,7 @@
 # .chezmoiscripts/run_onchange_20-install-brews.sh.tmpl before bundle runs,
 # otherwise Homebrew silently skips formulae from untrusted taps.
 tap "supabase/tap"
+tap "hashicorp/tap"
 
 # ===== Comms / collaboration =====
 cask "slack"
@@ -19,9 +20,14 @@ cask "cursor"
 cask "visual-studio-code"
 
 # ===== Infra =====
-cask "docker"
+# docker-desktop (formerly the "docker" cask). Its install needs sudo to symlink
+# /usr/local/bin/docker, so it only completes in an interactive `brew`/bootstrap
+# run — a non-interactive `chezmoi apply` will log it as failed (non-fatal).
+cask "docker-desktop"
 brew "kubectl"
-brew "terraform"
+# terraform was removed from homebrew-core after HashiCorp's BUSL relicense;
+# it now lives in HashiCorp's own tap (trusted in the install-brews script).
+brew "hashicorp/tap/terraform"
 brew "helm"
 
 # ===== Scientific / data =====

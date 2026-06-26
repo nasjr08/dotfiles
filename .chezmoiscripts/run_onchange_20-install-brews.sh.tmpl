@@ -15,15 +15,28 @@ set -euo pipefail
 
 SRC="{{ .chezmoi.sourceDir }}"
 
+# Run brew bundle without letting one bad entry abort the whole bootstrap — e.g.
+# a flaky cask download (microsoft-teams' CDN) or a GUI app corporate IT already
+# installs (Slack, Office, Cursor, VS Code...). brew bundle exits non-fatally so
+# later lifecycle scripts (macOS defaults, etc.) still run. Failures are logged
+# loudly rather than hidden.
+brew_bundle_nonfatal() {
+  local file="$1" label="$2"
+  if ! brew bundle --file="$file"; then
+    echo "[brews] ⚠️  WARNING: some '$label' Brewfile entries failed (see above)." >&2
+    echo "[brews]     Non-fatal — continuing. Re-run 'chezmoi apply' or install by hand." >&2
+  fi
+}
+
 echo "[brews] running brew bundle for common Brewfile"
-brew bundle --file="$SRC/packages/Brewfile"
+brew_bundle_nonfatal "$SRC/packages/Brewfile" "common"
 
 {{ if eq .flavor "personal" -}}
 echo "[brews] rendering and applying Brewfile.personal"
 TMP_BREWFILE_PERSONAL="$(mktemp)"
 trap 'rm -f "$TMP_BREWFILE_PERSONAL"' EXIT
 chezmoi execute-template < "$SRC/packages/Brewfile.personal.tmpl" > "$TMP_BREWFILE_PERSONAL"
-brew bundle --file="$TMP_BREWFILE_PERSONAL"
+brew_bundle_nonfatal "$TMP_BREWFILE_PERSONAL" "personal"
 {{- end }}
 
 {{ if eq .flavor "work" -}}
@@ -33,12 +46,13 @@ echo "[brews] trusting taps declared in Brewfile.work"
 # the install appears to succeed while leaving things missing. Add new taps
 # here in lockstep with adding `tap "..."` lines to Brewfile.work.tmpl.
 brew trust supabase/tap
+brew trust hashicorp/tap
 
 echo "[brews] rendering and applying Brewfile.work"
 TMP_BREWFILE_WORK="$(mktemp)"
 trap 'rm -f "$TMP_BREWFILE_WORK"' EXIT
 chezmoi execute-template < "$SRC/packages/Brewfile.work.tmpl" > "$TMP_BREWFILE_WORK"
-brew bundle --file="$TMP_BREWFILE_WORK"
+brew_bundle_nonfatal "$TMP_BREWFILE_WORK" "work"
 {{- end }}
 
 echo "[brews] done"
