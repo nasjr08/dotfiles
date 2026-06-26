@@ -75,10 +75,16 @@ main() {
         backup_if_exists "$f"
     done
 
-    # 5b. Verify GitHub SSH auth (requires 1Password SSH agent to be configured)
+    # 5b. Verify GitHub SSH auth (requires 1Password SSH agent to be configured).
+    # GitHub always exits non-zero on `ssh -T` (no shell access). Capture the
+    # output to a variable so `set -o pipefail` doesn't bubble ssh's exit code
+    # up through `ssh | grep`.
     log "checking GitHub SSH auth (requires 1Password SSH agent)"
-    if ! ssh -T -o BatchMode=yes -o ConnectTimeout=5 git@github.com 2>&1 | grep -q "successfully authenticated"; then
+    ssh_probe="$(ssh -T -o BatchMode=yes -o ConnectTimeout=5 git@github.com 2>&1 || true)"
+    if ! grep -q "successfully authenticated" <<<"$ssh_probe"; then
         echo "[bootstrap] ERROR: GitHub SSH auth not configured." >&2
+        echo "[bootstrap]   ssh -T output was:" >&2
+        echo "[bootstrap]     ${ssh_probe//$'\n'/$'\n[bootstrap]     '}" >&2
         echo "[bootstrap]   Open 1Password → Settings → Developer → enable 'Use the SSH agent'." >&2
         echo "[bootstrap]   See README prereqs for the full list." >&2
         exit 1
