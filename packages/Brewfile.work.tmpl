@@ -3,6 +3,12 @@
 # brew bundle is tolerant: if IT or you pre-installed any cask/MAS app,
 # bundle skips it with a warning rather than failing.
 
+# ===== Taps =====
+# Trust for supabase/tap is set in
+# .chezmoiscripts/run_onchange_20-install-brews.sh.tmpl before bundle runs,
+# otherwise Homebrew silently skips formulae from untrusted taps.
+tap "supabase/tap"
+
 # ===== Comms / collaboration =====
 cask "slack"
 cask "microsoft-teams"
@@ -18,12 +24,23 @@ brew "kubectl"
 brew "terraform"
 brew "helm"
 
+# ===== Scientific / data =====
+brew "r"
+brew "postgresql@14"
+
 # ===== Bioinformatics =====
 brew "bedtools"
 brew "blast"
 brew "fastqc"
 brew "kraken2"
 brew "nextflow"
+
+# ===== Dev tooling =====
+cask "ngrok"
+brew "supabase/tap/supabase"
+
+# ===== Misc =====
+brew "speedtest-cli"
 
 # ===== Notes / docs =====
 cask "obsidian"

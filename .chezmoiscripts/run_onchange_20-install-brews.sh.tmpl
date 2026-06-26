@@ -27,6 +27,13 @@ brew bundle --file="$TMP_BREWFILE_PERSONAL"
 {{- end }}
 
 {{ if eq .flavor "work" -}}
+echo "[brews] trusting taps declared in Brewfile.work"
+# Homebrew >=4.4 requires explicit trust per third-party tap. Without this,
+# `brew bundle` silently skips any formula/cask/command from these taps and
+# the install appears to succeed while leaving things missing. Add new taps
+# here in lockstep with adding `tap "..."` lines to Brewfile.work.tmpl.
+brew trust supabase/tap
+
 echo "[brews] rendering and applying Brewfile.work"
 TMP_BREWFILE_WORK="$(mktemp)"
 trap 'rm -f "$TMP_BREWFILE_WORK"' EXIT
