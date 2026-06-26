@@ -5,7 +5,14 @@
 
 set -euo pipefail
 
-DOTFILES_REPO="${DOTFILES_REPO:-git@github.com:nasjr08/dotfiles.git}"
+# Use HTTPS for the initial clone so a fresh Mac can bootstrap without any
+# pre-existing GitHub SSH auth. Once chezmoi apply has written
+# ~/.config/1Password/ssh/agent.toml and 1Password has been restarted, SSH is
+# available for daily work. If you want to push from this Mac later, switch
+# the remote:
+#     chezmoi cd
+#     git remote set-url origin git@github.com:nasjr08/dotfiles.git
+DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/nasjr08/dotfiles.git}"
 LOG="$HOME/.bootstrap.log"
 BACKUP_DIR="$HOME/.bootstrap-backup-$(date +%Y%m%d-%H%M%S)"
 

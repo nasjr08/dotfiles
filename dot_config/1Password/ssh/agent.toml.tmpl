@@ -1,0 +1,17 @@
+# ~/.config/1Password/ssh/agent.toml — managed by chezmoi.
+# The 1Password SSH agent only offers the keys whitelisted here.
+# After chezmoi apply, restart the 1Password app for changes to take effect.
+
+{{ if eq .flavor "work" -}}
+[[ssh-keys]]
+item = "Work GitHub SSH"
+vault = "Work"
+
+[[ssh-keys]]
+item = "Work GitLab SSH"
+vault = "Work"
+{{- else -}}
+[[ssh-keys]]
+item = "Personal GitHub SSH"
+vault = "Personal"
+{{- end }}

@@ -23,6 +23,8 @@ In the 1Password **desktop app** (the CLI can't generate SSH keys):
 
 Titles are exact — `scripts/verify-op-paths.sh` greps for these names.
 
+> **About the SSH agent allow-list**: creating an SSH-Key item in 1Password does NOT automatically expose it to the SSH agent — the agent only serves items listed in `~/.config/1Password/ssh/agent.toml`. This repo manages that file (see `dot_config/1Password/ssh/agent.toml.tmpl`), so `chezmoi apply` will write the allow-list for you. If you ever need to do it manually (e.g., before chezmoi has run, or after a manual edit you want to undo) → open the item in 1Password → click **Open SSH Agent Config File…** in the purple banner → save → **restart the 1Password app**. See the troubleshooting section at the bottom for the symptoms that signal this is the problem.
+
 ### 3. Register `Work GitHub SSH` on github.com
 
 ```bash
@@ -81,3 +83,28 @@ The verifier passes as long as the items **exist** in 1Password — it doesn't c
 ## Reference: what "FQDN" means
 
 Fully Qualified Domain Name — the complete hostname, all parts included. `gitlab.internal.etherapeutics.co.uk` is an FQDN; just `gitlab` or `internal.etherapeutics.co.uk` is not. At the chezmoi prompt, paste the whole thing with no `https://`, no path, no port.
+
+## Troubleshooting
+
+### Symptom: `git@github.com: Permission denied (publickey).`
+
+You're running a `git clone` or `chezmoi update` over SSH and GitHub rejects you. Most common cause: 1Password's SSH agent is running but isn't whitelisted to serve any keys, so no key is offered.
+
+Diagnose:
+```bash
+ssh-add -l   # if "The agent has no identities", that's your problem
+```
+
+Fix (manual, do this if chezmoi hasn't run yet):
+1. In 1Password desktop → open the relevant SSH-Key item (e.g., `Work GitHub SSH`).
+2. Click **Open SSH Agent Config File…** in the purple banner at the top of the item.
+3. A `[[ssh-keys]]` block for that item is appended to `~/.config/1Password/ssh/agent.toml`. Save.
+4. Repeat for every SSH key you want the agent to serve (e.g., also `Work GitLab SSH`).
+5. **Restart the 1Password app** so the agent re-reads the file.
+6. Re-run `ssh-add -l` — the keys should now appear, and `ssh -T git@github.com` should succeed.
+
+Fix (after chezmoi has been applied at least once): `chezmoi apply` overwrites `agent.toml` from `dot_config/1Password/ssh/agent.toml.tmpl`. If you've edited the template recently (e.g., to add a new key item), just `chezmoi apply` and restart 1Password.
+
+### Symptom: `bootstrap.sh` failing with SSH-related errors on a fresh Mac
+
+Since the move to HTTPS for the initial clone (see `bootstrap.sh`), bootstrap itself shouldn't need SSH at all — chezmoi clones the public repo over HTTPS. If you're still hitting SSH errors during bootstrap, you've likely overridden `DOTFILES_REPO` with an SSH URL. Unset it or use the default.
