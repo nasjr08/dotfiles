@@ -1,14 +1,36 @@
 {{ if eq .flavor "work" -}}
 # packages/Brewfile.work — applied only when flavor == "work".
-# Add work-specific tools as you set up the new role. Examples:
-#
-#   cask "slack"
-#   cask "zoom"
-#   cask "visual-studio-code"
-#   brew "kubectl"
-#   brew "terraform"
-#   mas "Microsoft Teams", id: 1113153706
-#
-# Discover IDs for Mac App Store apps via:
-#   mas search "<app name>"
+# brew bundle is tolerant: if IT or you pre-installed any cask/MAS app,
+# bundle skips it with a warning rather than failing.
+
+# ===== Comms / collaboration =====
+cask "slack"
+cask "microsoft-teams"
+cask "zoom"
+
+# ===== IDEs / editors =====
+cask "cursor"
+cask "visual-studio-code"
+
+# ===== Infra =====
+cask "docker"
+brew "kubectl"
+brew "terraform"
+brew "helm"
+
+# ===== Bioinformatics =====
+brew "bedtools"
+brew "blast"
+brew "fastqc"
+brew "kraken2"
+brew "nextflow"
+
+# ===== Notes / docs =====
+cask "obsidian"
+
+# ===== Mac App Store apps =====
+mas "Microsoft Outlook",    id: 985367838
+mas "Microsoft Word",       id: 462054704
+mas "Microsoft Excel",      id: 462058435
+mas "Microsoft PowerPoint", id: 462062816
 {{- end }}

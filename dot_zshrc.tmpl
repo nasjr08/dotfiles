@@ -20,10 +20,11 @@ fi
 # Local bin
 export PATH="$HOME/.local/bin:$PATH"
 
-# pyenv + pyenv-virtualenv (guarded — only set up if installed)
+# pyenv + pyenv-virtualenv (guarded by binary presence — works whether pyenv
+# was installed via Homebrew or via the upstream installer at ~/.pyenv).
 export PYENV_ROOT="$HOME/.pyenv"
-if [[ -d $PYENV_ROOT/bin ]]; then
-    export PATH="$PYENV_ROOT/bin:$PATH"
+if command -v pyenv >/dev/null 2>&1; then
+    [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
     eval "$(pyenv init --path)"
     eval "$(pyenv init -)"
     command -v pyenv-virtualenv-init >/dev/null 2>&1 && eval "$(pyenv virtualenv-init -)"

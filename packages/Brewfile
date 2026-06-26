@@ -37,6 +37,8 @@ brew "awscli"
 # ===== Python ecosystem =====
 brew "ruff"
 brew "poetry"
+brew "pyenv"
+brew "pyenv-virtualenv"
 
 # ===== Casks =====
 cask "caffeine"
