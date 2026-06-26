@@ -31,6 +31,10 @@ On first run you'll be prompted for:
 
 Total time: ~30–45 minutes (Homebrew and Mac App Store downloads), ~10 min active.
 
+### After bootstrap: manual tweaks
+
+A few personalisations can't be set declaratively (iTerm2 keybinding presets, hotkey windows, etc.). Walk through **[docs/manual-settings.md](docs/manual-settings.md)** and apply each. Whenever you find a new setting that has to be clicked manually, add it to that file so the next fresh Mac has a complete runbook.
+
 ## Ongoing usage
 
 | Situation | Command |
