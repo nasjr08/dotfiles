@@ -1,5 +1,8 @@
 # ~/.ssh/config — managed by chezmoi.
 # All host configs use the 1Password SSH agent — private keys never live on disk.
+# NOTE: do NOT set `IdentitiesOnly yes` here. With keys held only in the 1Password
+# agent (no on-disk key files), IdentitiesOnly restricts ssh to the non-existent
+# default key files and offers the agent nothing -> "Permission denied (publickey)".
 
 Host *
     IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
@@ -11,12 +14,10 @@ Host github.com
     Hostname ssh.github.com
     Port 443
     User git
-    IdentitiesOnly yes
 
 {{ if and (eq .flavor "work") .work_gitlab_host -}}
 # Self-hosted work GitLab. The 1Password SSH agent will offer the matching
 # key (stored in the Work vault as `Work GitLab SSH`) for this host.
 Host {{ .work_gitlab_host }}
     User git
-    IdentitiesOnly yes
 {{- end }}

@@ -45,6 +45,10 @@ cask "claude-code"
 cask "codex"
 
 # ===== Node globals =====
-# (Captured via `brew bundle dump`; node must be installed first.)
-npm "@anthropic-ai/claude-code"
-npm "corepack"
+# NOTE: deliberately NO `npm "..."` entries. `brew bundle dump` on the old Mac
+# captured claude-code BOTH as a cask (above) and as an npm global, plus corepack.
+# On a fresh Mac those double-installs collide and fail `brew bundle`:
+#   - npm "@anthropic-ai/claude-code" -> EEXIST on /opt/homebrew/bin/claude (cask owns it)
+#   - npm "corepack"                  -> EEXIST on /opt/homebrew/bin/pnpm  (brew pnpm owns it)
+# claude-code is provided by the cask above; corepack already ships with Node.
+# Run `corepack enable` by hand if you ever want the pnpm/yarn shims.
