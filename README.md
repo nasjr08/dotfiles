@@ -10,7 +10,10 @@ Mac setup automation. One command provisions a fresh Mac with shell config, CLI 
 2. Install [1Password](https://1password.com/downloads/mac), sign in.
 3. In 1Password Settings → Developer, enable **Use the SSH agent** and **Integrate with 1Password CLI**.
 4. Follow `docs/1password-setup.md` to create the `Work` vault and required items.
-5. Add the public SSH key from the Work vault to your work GitHub account.
+5. For the work Mac, register **two** SSH public keys (both stored in the Work vault):
+   - `Work GitHub SSH` on github.com (used once, to clone this dotfiles repo during bootstrap).
+   - `Work GitLab SSH` on the self-hosted org GitLab (used for daily work).
+   For the personal Mac, just register `Personal GitHub SSH` on github.com.
 
 ### Bootstrap
 
@@ -22,6 +25,7 @@ On first run you'll be prompted for:
 - `flavor` — `work` or `personal`
 - `fullName`, `email` — for git config
 - `op_vault` — 1Password vault name (e.g., `Work`)
+- `work_gitlab_host` — work-flavor only: FQDN of your org's self-hosted GitLab (e.g., `gitlab.internal.acme.co.uk`)
 
 Total time: ~30–45 minutes (Homebrew and Mac App Store downloads), ~10 min active.
 

@@ -6,11 +6,14 @@
 {{- $fullName := promptStringOnce . "fullName" "Full name for git commits"      "Naseer Basma" -}}
 {{- $email    := promptStringOnce . "email"    "Email for git commits"          "" -}}
 {{- $opVault  := promptStringOnce . "op_vault" "1Password vault name for this flavor" (eq $flavor "work" | ternary "Work" "Personal") -}}
-{{- $workOrg  := promptStringOnce . "work_org" "Work GitHub org name (leave blank if personal)" "" -}}
+{{- $workGitlabHost := "" -}}
+{{- if eq $flavor "work" -}}
+{{-   $workGitlabHost = promptStringOnce . "work_gitlab_host" "Work GitLab host FQDN (e.g. gitlab.internal.acme.co.uk)" "" -}}
+{{- end -}}
 
 [data]
-    flavor   = {{ $flavor | quote }}
-    fullName = {{ $fullName | quote }}
-    email    = {{ $email | quote }}
-    op_vault = {{ $opVault | quote }}
-    work_org = {{ $workOrg | quote }}
+    flavor           = {{ $flavor | quote }}
+    fullName         = {{ $fullName | quote }}
+    email            = {{ $email | quote }}
+    op_vault         = {{ $opVault | quote }}
+    work_gitlab_host = {{ $workGitlabHost | quote }}

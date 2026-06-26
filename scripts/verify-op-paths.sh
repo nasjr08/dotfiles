@@ -7,8 +7,14 @@ set -uo pipefail
 VAULT="${OP_VAULT:-Work}"
 
 PATHS=(
-    # Required for bootstrap (GitHub SSH access).
+    # Required for bootstrap (GitHub SSH access — used to clone this repo).
     "op://${VAULT}/${VAULT} GitHub SSH/public key"
+)
+
+# Work-only paths (only probed when OP_VAULT=Work).
+WORK_PATHS=(
+    # GitLab SSH key for daily work against the self-hosted org GitLab.
+    "op://Work/Work GitLab SSH/public key"
 )
 
 # Personal-only paths (only probed when OP_VAULT=Personal).
@@ -44,6 +50,17 @@ for path in "${PATHS[@]}"; do
         fail=1
     fi
 done
+
+if [[ "$VAULT" == "Work" ]]; then
+    for path in "${WORK_PATHS[@]}"; do
+        if op read "$path" >/dev/null 2>&1; then
+            printf "  OK   %s\n" "$path"
+        else
+            printf "  FAIL %s\n" "$path"
+            fail=1
+        fi
+    done
+fi
 
 if [[ "$VAULT" == "Personal" ]]; then
     for path in "${PERSONAL_PATHS[@]}"; do

@@ -19,10 +19,3 @@
     smudge   = git-lfs smudge -- %f
     process  = git-lfs filter-process
     required = true
-
-{{ if and (eq .flavor "work") .work_org -}}
-# Rewrites for the work GitHub org so SSH uses the work-specific host alias
-# defined in private_dot_ssh/config.tmpl.
-[url "git@github.com-work:{{ .work_org }}/"]
-    insteadOf = git@github.com:{{ .work_org }}/
-{{- end }}

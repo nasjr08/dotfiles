@@ -13,12 +13,10 @@ Host github.com
     User git
     IdentitiesOnly yes
 
-{{ if eq .flavor "work" -}}
-# Work-only host alias. Lets git use a different 1Password SSH key for the
-# work GitHub org (see dot_gitconfig.tmpl url-rewrite block).
-Host github.com-work
-    Hostname ssh.github.com
-    Port 443
+{{ if and (eq .flavor "work") .work_gitlab_host -}}
+# Self-hosted work GitLab. The 1Password SSH agent will offer the matching
+# key (stored in the Work vault as `Work GitLab SSH`) for this host.
+Host {{ .work_gitlab_host }}
     User git
     IdentitiesOnly yes
 {{- end }}

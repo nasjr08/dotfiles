@@ -11,7 +11,13 @@ Required **before** running `bootstrap.sh` on a new Mac for the first time.
 
 ## What to set up for the initial bootstrap
 
-The minimum required to bootstrap a new work Mac is the **GitHub SSH key**. Everything else can be added later as you adopt more work tooling.
+For the **personal** Mac, the minimum is a single `Personal GitHub SSH` key.
+
+For the **work** Mac, you need **two** SSH keys in the Work vault:
+- `Work GitHub SSH` — used once, to clone this dotfiles repo (which lives on GitHub) during bootstrap.
+- `Work GitLab SSH` — used for day-to-day work against the self-hosted org GitLab (e.g. `gitlab.internal.acme.co.uk`).
+
+Everything else can be added later as you adopt more work tooling.
 
 ### 1. Create the vault
 
@@ -19,23 +25,33 @@ Open the 1Password desktop app → vault dropdown → New Vault.
 - For the work Mac: name it exactly `Work`.
 - For the personal Mac: the default `Personal` vault is fine.
 
-### 2. Generate the GitHub SSH key inside 1Password
+### 2. Generate the SSH keys inside 1Password
 
-In the 1Password app:
+In the 1Password app, for **each** key you need (one for personal, two for work):
 
 1. New item → SSH Key.
-2. Title: `Work GitHub SSH` (for the work vault) or `Personal GitHub SSH` (for the personal vault). The exact title matters — `scripts/verify-op-paths.sh` looks for `<VaultName> GitHub SSH`.
+2. Title:
+   - Personal Mac: `Personal GitHub SSH`.
+   - Work Mac (key 1): `Work GitHub SSH`.
+   - Work Mac (key 2): `Work GitLab SSH`.
+
+   The exact titles matter — `scripts/verify-op-paths.sh` looks for these names.
 3. Vault: select the vault from step 1.
 4. Click **Add Private Key** → **Generate** → **Ed25519**.
 5. Save.
 
-Then on the source Mac:
+### 2a. Register the GitHub key
+
+Copy the public key:
 
 ```bash
+# Personal:
+op item get 'Personal GitHub SSH' --vault='Personal' --fields 'public key' | pbcopy
+# Work:
 op item get 'Work GitHub SSH' --vault='Work' --fields 'public key' | pbcopy
 ```
 
-Paste the public key into GitHub → Settings → SSH and GPG keys → New SSH key. Title it something like "Work Mac via 1Password".
+Paste it into GitHub → Settings → SSH and GPG keys → New SSH key. Title it something like "Work Mac via 1Password".
 
 Test the SSH agent is serving it:
 
@@ -44,6 +60,24 @@ ssh -T git@github.com
 ```
 
 You should see a Touch ID prompt; on success: `Hi <github-username>! You've successfully authenticated...`.
+
+### 2b. Register the GitLab key (work Mac only)
+
+Copy the public key:
+
+```bash
+op item get 'Work GitLab SSH' --vault='Work' --fields 'public key' | pbcopy
+```
+
+Sign into the self-hosted GitLab in your browser (e.g. `https://gitlab.internal.acme.co.uk`) → top-right avatar → **Edit profile** → **SSH Keys** in the sidebar → paste, give it a title like "Work Mac via 1Password", choose `Authentication & Signing` for usage, then **Add key**.
+
+Test:
+
+```bash
+ssh -T git@gitlab.internal.acme.co.uk    # replace with your actual host
+```
+
+Touch ID prompt → `Welcome to GitLab, @<your-username>!`.
 
 ### 3. Verify
 
@@ -91,6 +125,7 @@ Add a corresponding line to `scripts/verify-op-paths.sh`'s `PATHS` array.
 | What | Item title pattern | Field |
 |---|---|---|
 | GitHub SSH key | `<Vault> GitHub SSH` | `public key` (auto-populated by 1Password) |
+| GitLab SSH key (work only) | `Work GitLab SSH` | `public key` (auto-populated by 1Password) |
 | AWS credentials | `<Vault> AWS – <profile>` | custom: `access_key`, `secret_key` |
 | Generic API key | `<ServiceName>` | `credential` (default for API Credential items) |
 
