@@ -89,6 +89,17 @@ main() {
     chezmoi init --apply "$DOTFILES_REPO"
 
     log "bootstrap complete. Log: $LOG. Backups (if any): $BACKUP_DIR"
+
+    # Surface the manual-tweaks runbook — settings that have to be applied by
+    # hand (iTerm2 keybindings, hotkey windows, etc.). Bold + a blank line on
+    # each side so it doesn't get lost in the brew/mas output above.
+    printf '\n\033[1m============================================================\033[0m\n'
+    printf '\033[1mNEXT: apply the manual UI tweaks listed in:\033[0m\n'
+    printf '  • local: ~/.local/share/chezmoi/docs/manual-settings.md\n'
+    printf '  • web:   https://github.com/nasjr08/dotfiles/blob/main/docs/manual-settings.md\n'
+    printf 'Add to that file whenever you find a new setting that can'\''t be\n'
+    printf 'automated, so the next fresh Mac has a complete runbook.\n'
+    printf '\033[1m============================================================\033[0m\n\n'
 }
 
 main "$@"
